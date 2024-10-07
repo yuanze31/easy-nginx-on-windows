@@ -8,6 +8,8 @@ init(autoreset=True)
 
 
 def load_config():
+    default_config = {{"nginx_directory": "D:/Toolbox/nginx"}}
+
     try:
         with open("config.json", "r") as f:
             config = json.load(f)
@@ -15,10 +17,13 @@ def load_config():
             return config
     except json.JSONDecodeError as e:
         print(f"读取JSON文件时出错：{e}")
-        return None
+        return default_config
     except FileNotFoundError as e:
         print(f"未找到配置文件：{e}")
-        return None
+        with open("config.json", "w") as f:
+            json.dump(default_config, f, indent=4)
+            print("已生成默认配置文件。")
+        return default_config
 
 
 def check_nginx_executable(nginx_directory):
